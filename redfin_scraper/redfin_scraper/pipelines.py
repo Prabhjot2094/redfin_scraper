@@ -33,6 +33,7 @@ class RedfinScraperDBPipeline(object):
         column_headers = ",".join([h.lower() for h in item.keys()])
         val = "','".join([item[k] for k in item.keys()])
 
+        #All the data is currently stored in the raw format in a single table
         print("insert into raw_data('{}') values('{}')".format(column_headers, val))
         self.cur.execute("insert into raw_data({}) values('{}')".format(column_headers, val))
         self.conn.commit()

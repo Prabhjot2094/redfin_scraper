@@ -10,15 +10,18 @@ class Redfin(scrapy.Spider):
 
     start_urls = ["https://www.redfin.com"]
 
-    max_price = 10
+    max_price = 10000
     min_price = 0
     
     def parse(self, response):
         #Iterate over all cities on the homepage
         filters = "/filter/include=sold-all,min-price={}k,max-price={}k".format(self.min_price, self.max_price)
         for city in response.xpath("//*[@id=\"content\"]/div[3]/div[6]/section/div/ul/li"):
-            url = "https://www.redfin.com"+city.xpath("a/@href").extract()[0]+filters
-            return scrapy.Request(url, callback = self.modify_download_filters)
+            url = city.xpath("a/@href").extract()
+            if not url:
+                continue
+            url = "https://www.redfin.com"+url[0]+filters
+            yield scrapy.Request(url, callback = self.modify_download_filters)
 
     def process_sold_homes(self, response):
         print(response.url)
@@ -26,21 +29,12 @@ class Redfin(scrapy.Spider):
         raw_data = response.text.strip()
         rows = raw_data.split("\n")
         
-        #headers = ['SALE TYPE', 'SOLD DATE', 'PROPERTY TYPE', 'ADDRESS', 'CITY', 'STATE', 'ZIP', 'PRICE', 'BEDS', 'BATHS', 'LOCATION', 'SQUARE FEET', 
-        #        'LOT SIZE', 'YEAR BUILT', 'DAYS ON MARKET', 'SQUARE FEET', 'HOA MONTH', 'STATUS', 'NEXT OPEN HOUSE START TIME', 'NEXT OPEN HOUSE END TIME', 
-        #        'URL', 'SOURCE', 'MLS', 'FAVORITE', 'INTERESTED', 'LATITUDE', 'LONGITUDE'] 
-        
-        #for i in range(len(config.HEADERS)):
-        #    headers[i] = headers[i].replace(" ","_")
-        
         #each row corresponds to a particular house
         for row in rows[1:-1]:
             house = HouseItem()
             address = AddressItem()
             for header, val in zip(config.HEADERS, row.split(",")):
-                if header in config.ADDRESS_FIELDS:
-                    address[header] = val.strip()
-                elif header in config.HOUSE_FIELDS:
+                if header in config.HOUSE_FIELDS:
                     house[header] = val.strip()
                 else:
                     continue
@@ -80,28 +74,21 @@ class Redfin(scrapy.Spider):
                 
                 #Allows for rapid increment is low number of houses found in current range
                 max_filter_increment = (10000/no_of_homes)*(self.max_price-self.min_price)
-                
+
+                #Update max and min prices as the current ones have yielded <10k results
                 self.min_price = self.max_price+1
-                self.max_price += max_filter_increment
+                self.max_price += max_filter_increment+1
+
                 #if self.min_price!=0:
                 filter_value = "filter/max-price={}k,min-price={}k,include=sold-all" 
-                #else:
-                #    filter_value = "filter/max-price={}k,include=sold-all" 
-            
-                #download_url +=("&max_price={}".format(self.max_price))
-
-                #if self.min_price!=0:
-                #    download_url+=("&min_price={}".format(self.min_price))
-
                 download_url = self.start_urls[0]+download_url
                 print(download_url)
-                #for i in range(3):
                 print("\a")
-                #    time.sleep(1)
-                #print("*"*15,download_url)
-
+                
+                #Crawl with new filter values
                 next_filter_url = request_url+filter_value.format(self.max_price, self.min_price)
                 yield scrapy.Request(next_filter_url, callback = self.modify_download_filters)
-
+                
+                #Scrape the current page as it yielded < 10K results
                 yield scrapy.Request(download_url, callback = self.process_sold_homes)
 

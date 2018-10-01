@@ -23,6 +23,11 @@ class AddressItem(scrapy.Item):
     
 class HouseItem(scrapy.Item):
     # Fields representing a house. Not completely normalised:
+    ADDRESS=scrapy.Field()
+    LOCATION=scrapy.Field()
+    CITY=scrapy.Field()
+    STATE=scrapy.Field()
+    ZIP=scrapy.Field()
     SOLD_DATE=scrapy.Field()
     PROPERTY_TYPE=scrapy.Field()
     PRICE=scrapy.Field()
