@@ -1,9 +1,0 @@
-import scrapy
-
-class Redfin(scrapy.Spider):
-
-    start_urls = ["http://redfin.com"]
-    def parse(self, response):
-
-        for city in response.xpath("//*[@id="content"]/div[3]/div[6]/section/div/ul"):
-            yield city.xpath("li[1]/a")
