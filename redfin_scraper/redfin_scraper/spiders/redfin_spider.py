@@ -24,7 +24,6 @@ class Redfin(scrapy.Spider):
             yield scrapy.Request(url, callback = self.modify_download_filters)
 
     def process_sold_homes(self, response):
-        print(response.url)
         #Itemize data received on modifying the download_all link
         raw_data = response.text.strip()
         rows = raw_data.split("\n")
@@ -66,9 +65,7 @@ class Redfin(scrapy.Spider):
                 self.max_price = self.max_price/2
                 request_url += filter_value.format(self.max_price, self.min_price)
                 yield scrapy.Request(request_url, callback = self.modify_download_filters)
-                #no_of_homes = max([int(item) if item.isdigit() else 0 for item in search_stats.split()])
             else:
-                print("---------------------------------")
                 download_url = response.xpath("//*[@id=\"download-and-save\"]/@href").extract()[0]
                 download_url = download_url.replace("num_homes=350","num_homes=100000")
                 
@@ -82,8 +79,6 @@ class Redfin(scrapy.Spider):
                 #if self.min_price!=0:
                 filter_value = "filter/max-price={}k,min-price={}k,include=sold-all" 
                 download_url = self.start_urls[0]+download_url
-                print(download_url)
-                print("\a")
                 
                 #Crawl with new filter values
                 next_filter_url = request_url+filter_value.format(self.max_price, self.min_price)

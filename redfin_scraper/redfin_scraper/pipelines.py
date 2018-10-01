@@ -10,7 +10,7 @@ from redfin_scraper import config
 class RedfinScraperPipeline(object):
 
     def open_spider(self, spider):
-        self.file = open("/Users/prabhjotsingh/downloaded_homes.csv", "w")
+        self.file = open("/tmp/downloaded_homes.csv", "w")
         
     def close_spider(self, spider):
         self.file.close()
@@ -34,7 +34,6 @@ class RedfinScraperDBPipeline(object):
         val = "','".join([item[k] for k in item.keys()])
 
         #All the data is currently stored in the raw format in a single table
-        print("insert into raw_data('{}') values('{}')".format(column_headers, val))
         self.cur.execute("insert into raw_data({}) values('{}')".format(column_headers, val))
         self.conn.commit()
         

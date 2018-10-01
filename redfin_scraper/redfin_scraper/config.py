@@ -1,7 +1,8 @@
-HOST = "localhost"
-DB = "Lofty_Redfin"
-USER = "root"
-PASSWD = "Password@1"
+#PLease set the vlues for the following
+HOST = ""
+DB = ""
+USER = ""
+PASSWD = ""
 
 #Items to be left out
 USELESS_DATA_POINTS = ["FAVORITE", "INTERESTED", "NEXT_OPEN_HOUSE_START_TIME", "NEXT_OPEN_HOUSE_END_TIME", "STATUS", "SALE_TYPE"]
