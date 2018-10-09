@@ -88,7 +88,7 @@ CONCURRENT_REQUESTS_PER_IP = 2
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'redfin_scraper.pipelines.RedfinScraperDBPipeline': 200,
+    #'redfin_scraper.pipelines.RedfinScraperDBPipeline': 200,
     #'redfin_scraper.pipelines.RedfinScraperPipeline': 300,
 }
 
