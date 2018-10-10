@@ -26,9 +26,13 @@ def setup_linux():
     f = open ("/etc/polipo/config","w")
     for setting in polipo_config:
         f.write(setting)
+
     os.system('sudo apt-get install python3 python3-dev python3-pip')
     os.system('sudo /etc/init.d/tor start')
     os.system('sudo /etc/init.d/polipo restart')
+    os.system('sudo pip3 install -r requirements.txt')
+
+    #Adding the scrapy path
     os.system('export PATH="${PATH}:${HOME}/.local/bin"')
 
 def main():
