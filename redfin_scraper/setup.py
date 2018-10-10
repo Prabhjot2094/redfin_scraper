@@ -15,7 +15,7 @@ def get_platform():
     return platforms[sys.platform]
 
 polipo_config = ['socksParentProxy = localhost:9050', 'diskCacheRoot=""', 'disableLocalInterface=true']
-scrapy_dependencies = "sudo apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev"
+scrapy_dependencies = "sudo apt-get install -y python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev"
 
 def setup_linux():
     os.system('sudo apt-get update')
