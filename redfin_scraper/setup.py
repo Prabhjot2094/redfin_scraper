@@ -26,7 +26,7 @@ def setup_linux():
     f = open ("/etc/polipo/config","w")
     for setting in polipo_config:
         f.write(setting)
-    os.system('sudo apt-get install python3 python3-dev')
+    os.system('sudo apt-get install python3 python3-dev python3-pip')
     os.system('sudo /etc/init.d/tor start')
     os.system('sudo /etc/init.d/polipo restart')
     os.system('export PATH="${PATH}:${HOME}/.local/bin"')
