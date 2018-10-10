@@ -21,8 +21,12 @@ class Redfin(scrapy.Spider):
             if not url:
                 continue
             url = "https://www.redfin.com"+url[0]+filters
-            yield scrapy.Request(url, callback = self.modify_download_filters)
-
+            yield scrapy.Request(url, callback = self.modify_download_filters, errback = self.errorback_http)
+    
+    def errorback_http(self, failure):
+        print("*"*20)
+        print(failure.value)
+        
     def process_sold_homes(self, response):
         #Itemize data received on modifying the download_all link
         raw_data = response.text.strip()
