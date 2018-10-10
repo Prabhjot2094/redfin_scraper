@@ -33,7 +33,8 @@ def setup_linux():
 
 def main():
     platform = get_platform()
-    if platform == "Linux":
+    if platform.lower() == "linux":
         setup_linux()
     else:
         raise NotImplementedError
+main()
